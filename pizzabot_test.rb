@@ -25,4 +25,23 @@ class PizzabotTest < Minitest::Test
 
     assert_equal expected, start.directions_to(finish)
   end
+
+  def test_cannot_create_invalid_grid
+    assert_raises ArgumentError do
+      Grid.new(-2,3)
+    end
+
+    assert_raises ArgumentError do
+      Grid.new(3,-1)
+    end
+  end
+
+  def test_includes_location_correctly
+    grid = Grid.new(3,3)
+    location_in_grid = Location.new(2,2)
+    location_outside_grid = Location.new(-2,-2)
+
+    assert grid.include?(location_in_grid)
+    refute grid.include?(location_outside_grid)
+  end
 end

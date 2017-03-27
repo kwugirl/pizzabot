@@ -28,3 +28,28 @@ class Location
     horizontal_orientation*horizontal_difference.abs + vertical_orientation*vertical_difference.abs
   end
 end
+
+class Grid
+  def initialize(width, height)
+    validate_inputs(width, height)
+
+    @x_range = (0..width)
+    @y_range = (0..height)
+  end
+
+  def include?(location)
+    @x_range.include?(location.x) && @y_range.include?(location.y)
+  end
+
+  private
+
+  def validate_inputs(width, height)
+    unless non_negative_integer?(width) && non_negative_integer?(height)
+      raise ArgumentError, "must have non_negative integer inputs"
+    end
+  end
+
+  def non_negative_integer?(num)
+    num.integer? && num >= 0
+  end
+end
