@@ -53,3 +53,24 @@ class Grid
     num.integer? && num >= 0
   end
 end
+
+class PizzaBot
+  attr_reader :locations
+
+  def initialize(grid, locations)
+    @grid = grid
+    @locations = locations.select {|location| grid.include?(location) }
+  end
+
+  def instructions
+    instructions = []
+
+    locations.each_cons(2) do |location_pair|
+      start, finish = location_pair
+
+      instructions << start.directions_to(finish)
+    end
+
+    instructions.join("D") + "D"
+  end
+end
