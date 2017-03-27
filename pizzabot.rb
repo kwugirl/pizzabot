@@ -27,9 +27,15 @@ class Location
 
     horizontal_orientation*horizontal_difference.abs + vertical_orientation*vertical_difference.abs
   end
+
+  def ==(other_location)
+    self.x == other_location.x && self.y == other_location.y
+  end
 end
 
 class Grid
+  attr_reader :x_range, :y_range
+
   def initialize(width, height)
     validate_inputs(width, height)
 
@@ -39,6 +45,10 @@ class Grid
 
   def include?(location)
     @x_range.include?(location.x) && @y_range.include?(location.y)
+  end
+
+  def ==(other_grid)
+    self.x_range == other_grid.x_range && self.y_range == other_grid.y_range
   end
 
   private
@@ -55,7 +65,7 @@ class Grid
 end
 
 class PizzaBot
-  attr_reader :locations
+  attr_reader :grid, :locations
 
   def initialize(grid, locations)
     @grid = grid
@@ -72,5 +82,23 @@ class PizzaBot
     end
 
     instructions.join("D") + "D"
+  end
+
+  class << self
+    def create_from_input(stdin)
+      grid_specification, locations = /^(\d+x\d+)(\(.+)$/.match(stdin.gsub(" ", "")).captures
+
+      width, height = grid_specification.split("x").map(&:to_i)
+      grid = Grid.new(width, height)
+
+      locations = locations[1...-1].split(")(").map do |location|
+        x, y = location.split(",").map(&:to_i)
+        Location.new(x,y)
+      end
+      # account for starting from origin location (0,0) on the grid
+      locations.unshift(Location.new(0,0))
+
+      PizzaBot.new(grid, locations)
+    end
   end
 end

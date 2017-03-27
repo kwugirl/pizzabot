@@ -65,4 +65,14 @@ class PizzaBotTest < Minitest::Test
 
     assert_equal expected, bot.instructions
   end
+
+  def test_create_from_input
+    input = "5x5 (1, 3) (4, 4)"
+    bot = PizzaBot.create_from_input(input)
+    grid = Grid.new(5,5)
+    locations = [Location.new(0,0), Location.new(1,3), Location.new(4,4)]
+
+    assert_equal grid, bot.grid
+    assert_equal locations, bot.locations
+  end
 end
